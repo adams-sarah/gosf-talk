@@ -6,7 +6,16 @@ sadams.codes@gmail.com
 @sadamscodes
 
 
-* First, a shout-out
+* First, my slides
+
+    go get golang.org/x/tools/present
+
+    git clone git@github.com:adams-sarah/gosf-talk.git
+
+    cd gosf-talk && present
+
+
+* Second, a shout-out
 
 .image images/wwg-group.png _ 500
 .caption _Women_Who_Go_ [[meetup.com/women-who-go]]
@@ -22,25 +31,37 @@ Thanks to all who have helped so far.
 
 * Why are docs so hard to maintain?
 
-* Remembering to document big changes is doable
+* Big changes: doable
 
 - major API feature additions
 - adding an API resource / set of endpoints
 - general changes to endpoint construction
 
 
-* But the little things always get me...
+* Little changes: I never remember
 
 - minor schema changes
 - param name changes
 - header field changes
 
+* Re: Why are docs so hard to maintain?
+
+The little changes *add* *up*.
+
 * Measuring the quality of your docs
 
-Your _API_doc_quality_ is *inversely* *correlated* to the _frequency_ with which developers _bug_you_with_questions_.
 
-In other words,
-if developers bug you often with questions like,
+API doc quality is 
+
+*inversely* *correlated* to 
+
+the frequency with which developers *bug* *you* *with* *questions*.
+
+.image images/graph.png _ 700
+
+* In other words...
+
+If you get a lot of questions like
 
  1. "How do I get an API token?" 
 
@@ -50,71 +71,119 @@ if developers bug you often with questions like,
 
  4. "What should the request body look like?" 
 
-chances are, your docs suck.
-
-
-* Why do you want better documentation?
-
-1. If your docs are awesome, _developers_will_read_them_.
-
-2. If developers read your docs, _they_will_ask_you_fewer_questions_.
-
-Win, win.
+chances are, your docs need help, 
+not your developers.
 
 
 * How to make your docs more awesome
 
-1. _reliably_accurate_
+1. Make them accurate, _reliably_ accurate.
 
-2. _extra_incentive_ for developers to use/read
+2. Give extra incentive for developers to use/read them.
+
+* My go-to API doc tools
+
+* API Blueprint: About
+
+.link https://apiblueprint.org API Blueprint
+
+- API documentation format
+- Open-source
+- Write docs in Markdown
+
+* API Blueprint: Example
+
+    ### Create a Widget [POST]
+    Add a Widget to the world-wide-widget collection.
+    
+    + Request (application/json)
+    
+        + Body
+    
+                {
+                    "Name": "anotherwidget",
+                    "Role": "controller"
+                }        
+    
+    
+    + Response 201 
+    
+        + Body
+    
+                {
+                    "Id": 8,
+                    "Name": "anotherwidget",
+                    "Role": "controller"
+                }        
+    
+
+* Apiary
+
+Parses your API Blueprint file, and hosts your documentation.
+
+.link http://docs.gosftalk20150617.apiary.io/ my example on apiary.io
+
+.image images/apiary.png _ 700
 
 
-* Example
-
-<What is API Blueprint format and why is it awesome>
 
 * My first attempt at a solution
 
-My first idea was to programatically check my API documentation against the API itself.
+* Attempt #1: The idea
 
-- I forked Apiary's .link https://github.com/apiaryio/dredd dredd and .link https://github.com/apiaryio/gavel.js gavel.js (automated API testing tools).
+- programatically check API documentation against the API itself
 
-- I wanted to hook the tools up to our CI build -- but they weren't reliable.
+- hook the API doc tests into our CI system
 
-- So, instead, I would periodically run the tools against our API and spend an hour or two fixing inconsistencies in the response diffs.
+- never push inaccurate documentation ever again!
+
+
+* Attempt #1: Implementation
+- I forked two of Apiary's open-source API testing tools:
+.link https://github.com/apiaryio/dredd dredd
+.link https://github.com/apiaryio/gavel.js gavel
+
+- I set up automated tests
+
+- I ran these tests periodically, and would spend *a* *few* *hours* just fixing the API docs.
 
 
 * Problems I had with this solution
 
-- For stretches of time (varying in length), the documentation would be out of date.
+- The documentation was more often out of date than not.
 
-- Fixing documentation diffs for a few hours is not my idea of a good time - tedious, boring, boring.
+- Fixing documentation for *a* *few* *hours* is not my idea of a good time.
 
 
 * Solution #2 - test2doc
 
 - My favorite form of documentation is *tests*.
 
-- iOS and firmware teams reluctant to read tests for documentation, understandably.
+- iOS, firmware teams were reluctant to read tests for documentation -- understandabe, I guess.
 
-- How can I capture the information in my unit tests, and display it in a friendlier way?
+* Question:
 
-And thus, `test2doc` was born.
+How can I capture the information in my tests, and display it in a friendlier way for my teammates?
 
+* And then came `test2doc`
 
 * How test2doc works
 
-I wanted my documentation to be generated with very little effort from me.
+`test2doc` pulls already-existing information from two places:
 
-So, `test2doc` pulls already-existing information from two places:
+1. Your tests: records the requests executed by your tests and their corresponding responses
 
-1. Your tests: record the requests executed by your tests and their corresponding responses
+2. Your GoDoc comments: grabs descriptions and metadata for the request handlers.
 
-2. Your GoDoc comments: grabs descriptions and metadata for your API, its endpoints, resources and groups from your GoDoc comments.
-
-* We're all lazy.
-
-Now, you can't use laziness 
+* `test2doc`: Example time
 
 
-* Example -- how to use test2doc
+
+* If you only take away one thing...
+
+Remember,
+
+.image images/graph.png _ 700
+
+If developers are asking _too_many_ questions, your docs are likely at fault. 
+
